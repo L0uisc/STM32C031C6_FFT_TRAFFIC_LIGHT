@@ -57,9 +57,6 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define User_Button_Pin GPIO_PIN_13
-#define User_Button_GPIO_Port GPIOC
-#define User_Button_EXTI_IRQn EXTI4_15_IRQn
 #define Led_Pin GPIO_PIN_5
 #define Led_GPIO_Port GPIOA
 #define LED_RED_Pin GPIO_PIN_0
@@ -69,7 +66,9 @@ void Error_Handler(void);
 #define LED_GREEN_Pin GPIO_PIN_2
 #define LED_GREEN_GPIO_Port GPIOD
 /* USER CODE BEGIN Private defines */
-
+#define RED_CYCLE_TIME_MS (20*1000)
+#define YELLOW_CYCLE_TIME_MS (2*1000)
+#define GREEN_CYCLE_TIME_MS (38*1000)
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
