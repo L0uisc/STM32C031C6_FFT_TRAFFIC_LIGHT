@@ -96,17 +96,39 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	const char *debug = "Test data 1\r\n";
+	HAL_UART_Transmit(&huart1, (uint8_t*)debug, strlen(debug), 100);
 	HAL_GPIO_WritePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin, GPIO_PIN_RESET);
+	debug = "Test data 2\r\n";
+	HAL_UART_Transmit(&huart1, (uint8_t*)debug, strlen(debug), 100);
 	HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_SET);
+	debug = "Test data 3\r\n";
+	HAL_UART_Transmit(&huart1, (uint8_t*)debug, strlen(debug), 100);
 	HAL_Delay(RED_CYCLE_TIME_MS);
 
+	debug = "Test data 4\r\n";
+	HAL_UART_Transmit(&huart1, (uint8_t*)debug, strlen(debug), 100);
 	HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_RESET);
+	debug = "Test data 5\r\n";
+	HAL_UART_Transmit(&huart1, (uint8_t*)debug, strlen(debug), 100);
 	HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_SET);
+	debug = "Test data 6\r\n";
+	HAL_UART_Transmit(&huart1, (uint8_t*)debug, strlen(debug), 100);
 	HAL_Delay(GREEN_CYCLE_TIME_MS);
 
+	debug = "Test data 7\r\n";
+	HAL_UART_Transmit(&huart1, (uint8_t*)debug, strlen(debug), 100);
 	HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_RESET);
+	debug = "Test data 8\r\n";
+	HAL_UART_Transmit(&huart1, (uint8_t*)debug, strlen(debug), 100);
 	HAL_GPIO_WritePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin, GPIO_PIN_SET);
+	debug = "Test data 9\r\n";
+	HAL_UART_Transmit(&huart1, (uint8_t*)debug, strlen(debug), 100);
+	debug = "Test data 10\r\n";
+	HAL_UART_Transmit(&huart1, (uint8_t*)debug, strlen(debug), 100);
 	HAL_Delay(YELLOW_CYCLE_TIME_MS);
+	debug = "Test data 11\r\n";
+	HAL_UART_Transmit(&huart1, (uint8_t*)debug, strlen(debug), 100);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
