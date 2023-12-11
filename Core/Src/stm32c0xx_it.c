@@ -57,7 +57,7 @@
 /* External variables --------------------------------------------------------*/
 
 /* USER CODE BEGIN EV */
-
+uint8_t systick_flag = 0;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -125,7 +125,7 @@ void PendSV_Handler(void)
 void SysTick_Handler(void)
 {
   /* USER CODE BEGIN SysTick_IRQn 0 */
-
+  systick_flag = 1;
   /* USER CODE END SysTick_IRQn 0 */
   HAL_IncTick();
   /* USER CODE BEGIN SysTick_IRQn 1 */
@@ -139,6 +139,20 @@ void SysTick_Handler(void)
 /* For the available peripheral interrupt handler names,                      */
 /* please refer to the startup file (startup_stm32c0xx.s).                    */
 /******************************************************************************/
+
+/**
+  * @brief This function handles EXTI line 4 to 15 interrupts.
+  */
+void EXTI4_15_IRQHandler(void)
+{
+  /* USER CODE BEGIN EXTI4_15_IRQn 0 */
+
+  /* USER CODE END EXTI4_15_IRQn 0 */
+  HAL_GPIO_EXTI_IRQHandler(BUTTON_Pin);
+  /* USER CODE BEGIN EXTI4_15_IRQn 1 */
+
+  /* USER CODE END EXTI4_15_IRQn 1 */
+}
 
 /* USER CODE BEGIN 1 */
 

@@ -59,18 +59,23 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define BUTTON_Pin GPIO_PIN_13
 #define BUTTON_GPIO_Port GPIOC
-#define LED_RED_Pin GPIO_PIN_0
-#define LED_RED_GPIO_Port GPIOA
-#define LED_YELLOW_Pin GPIO_PIN_1
-#define LED_YELLOW_GPIO_Port GPIOA
-#define LED_GREEN_Pin GPIO_PIN_4
-#define LED_GREEN_GPIO_Port GPIOA
+#define BUTTON_EXTI_IRQn EXTI4_15_IRQn
+#define LED_RED_1_Pin GPIO_PIN_0
+#define LED_RED_1_GPIO_Port GPIOA
+#define LED_YELLOW_1_Pin GPIO_PIN_1
+#define LED_YELLOW_1_GPIO_Port GPIOA
+#define LED_GREEN_1_Pin GPIO_PIN_4
+#define LED_GREEN_1_GPIO_Port GPIOA
 #define Led_Pin GPIO_PIN_5
 #define Led_GPIO_Port GPIOA
+#define LED_RED_2_Pin GPIO_PIN_3
+#define LED_RED_2_GPIO_Port GPIOB
+#define LED_YELLOW_2_Pin GPIO_PIN_4
+#define LED_YELLOW_2_GPIO_Port GPIOB
+#define LED_GREEN_2_Pin GPIO_PIN_5
+#define LED_GREEN_2_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
-#define RED_CYCLE_TIME_MS (6*1000)
-#define YELLOW_CYCLE_TIME_MS (2*1000)
-#define GREEN_CYCLE_TIME_MS (7*1000)
+
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

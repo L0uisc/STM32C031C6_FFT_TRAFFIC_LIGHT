@@ -21,6 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "traffic_light.h"
 #include <string.h>
 /* USER CODE END Includes */
 
@@ -43,7 +44,7 @@
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
-
+extern uint8_t systick_flag;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -92,38 +93,20 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-
+  print_debug("Traffic Light Controller v0.3 splash text\r\n");
+  traffic_light_init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	print_debug("Test data 1\r\n");
-	HAL_GPIO_WritePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin, GPIO_PIN_RESET);
-	print_debug("Test data 2\r\n");
-	HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_SET);
-	print_debug("Test data 3\r\n");
-	HAL_Delay(RED_CYCLE_TIME_MS);
-
-	print_debug("Test data 4\r\n");
-	HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_RESET);
-	print_debug("Test data 5\r\n");
-	HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_SET);
-	print_debug("Test data 6\r\n");
-	HAL_Delay(GREEN_CYCLE_TIME_MS);
-
-	print_debug("Test data 7\r\n");
-	HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_RESET);
-	print_debug("Test data 8\r\n");
-	HAL_GPIO_WritePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin, GPIO_PIN_SET);
-	print_debug("Test data 9\r\n");
-	HAL_Delay(YELLOW_CYCLE_TIME_MS);
-	print_debug("Test data 10\r\n");
-
-	if (HAL_GPIO_ReadPin(BUTTON_GPIO_Port, BUTTON_Pin) == GPIO_PIN_RESET)
+	if (systick_flag)
 	{
-	  print_debug("Button Pressed!\r\n");
+	  HAL_NVIC_DisableIRQ(SysTick_IRQn);
+	  systick_flag = 0;
+	  HAL_NVIC_EnableIRQ(SysTick_IRQn);
+	  traffic_light_handler();
 	}
     /* USER CODE END WHILE */
 
@@ -217,21 +200,25 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, LED_RED_Pin|LED_YELLOW_Pin|LED_GREEN_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, LED_RED_1_Pin|LED_YELLOW_1_Pin|LED_GREEN_1_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(Led_GPIO_Port, Led_Pin, GPIO_PIN_SET);
 
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOB, LED_RED_2_Pin|LED_YELLOW_2_Pin|LED_GREEN_2_Pin, GPIO_PIN_RESET);
+
   /*Configure GPIO pin : BUTTON_Pin */
   GPIO_InitStruct.Pin = BUTTON_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(BUTTON_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LED_RED_Pin LED_YELLOW_Pin LED_GREEN_Pin */
-  GPIO_InitStruct.Pin = LED_RED_Pin|LED_YELLOW_Pin|LED_GREEN_Pin;
+  /*Configure GPIO pins : LED_RED_1_Pin LED_YELLOW_1_Pin LED_GREEN_1_Pin */
+  GPIO_InitStruct.Pin = LED_RED_1_Pin|LED_YELLOW_1_Pin|LED_GREEN_1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -243,6 +230,17 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   HAL_GPIO_Init(Led_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : LED_RED_2_Pin LED_YELLOW_2_Pin LED_GREEN_2_Pin */
+  GPIO_InitStruct.Pin = LED_RED_2_Pin|LED_YELLOW_2_Pin|LED_GREEN_2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI4_15_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI4_15_IRQn);
 
 }
 
