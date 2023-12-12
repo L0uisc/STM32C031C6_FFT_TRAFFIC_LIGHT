@@ -58,7 +58,6 @@
 extern TIM_HandleTypeDef htim14;
 
 /* USER CODE BEGIN EV */
-uint8_t systick_flag = 0;
 uint8_t exti_flag = 0;
 /* USER CODE END EV */
 

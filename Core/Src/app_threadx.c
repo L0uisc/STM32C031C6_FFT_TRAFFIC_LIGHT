@@ -23,7 +23,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "main.h"
+#include "traffic_light.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -43,12 +44,15 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-
+static TX_THREAD TrafficLight_Phase1;
+static TX_THREAD TrafficLight_Phase2;
+static TX_SEMAPHORE Start_Sync;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
-
+void App_TrafficLight_Phase1_Entry(ULONG thread_input);
+void App_TrafficLight_Phase2_Entry(ULONG thread_input);
 /* USER CODE END PFP */
 
 /**
@@ -66,6 +70,44 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
   /* USER CODE END App_ThreadX_MEM_POOL */
 
   /* USER CODE BEGIN App_ThreadX_Init */
+  CHAR *pointer;
+
+  if (tx_byte_allocate(byte_pool, (VOID**) &pointer,
+		  	  	  	   TX_MINIMUM_STACK, TX_NO_WAIT) != TX_SUCCESS)
+  {
+    ret = TX_POOL_ERROR;
+	goto error;
+  }
+
+  if (tx_thread_create(&TrafficLight_Phase1, "Phase1 Thread", App_TrafficLight_Phase1_Entry, 0,
+ 	  pointer, TX_MINIMUM_STACK,
+  	  10, 10, TX_NO_TIME_SLICE, TX_AUTO_START) != TX_SUCCESS)
+  {
+	ret = TX_THREAD_ERROR;
+    goto error;
+  }
+
+  if (tx_byte_allocate(byte_pool, (VOID**) &pointer,
+  		  	  	  	   TX_MINIMUM_STACK, TX_NO_WAIT) != TX_SUCCESS)
+  {
+    ret = TX_POOL_ERROR;
+    goto error;
+  }
+
+  if (tx_thread_create(&TrafficLight_Phase2, "Phase2 Thread", App_TrafficLight_Phase2_Entry, 0,
+ 	  pointer, TX_MINIMUM_STACK,
+  		10, 10, TX_NO_TIME_SLICE, TX_AUTO_START) != TX_SUCCESS)
+  {
+    ret = TX_THREAD_ERROR;
+    goto error;
+  }
+
+  if (tx_semaphore_create(&Start_Sync, "Start Sync Semaphore", 2) != TX_SUCCESS)
+  {
+    ret = TX_SEMAPHORE_ERROR;
+    goto error;
+  }
+error:
   /* USER CODE END App_ThreadX_Init */
 
   return ret;
@@ -138,5 +180,53 @@ ULONG App_ThreadX_LowPower_Timer_Adjust(void)
 }
 
 /* USER CODE BEGIN 1 */
+void App_TrafficLight_Phase1_Entry(ULONG thread_input)
+{
+  (void)thread_input;
 
+  tx_semaphore_get(&Start_Sync, TX_WAIT_FOREVER);
+
+  tx_thread_sleep(INIT_CYCLE_TIME_S * TX_TIMER_TICKS_PER_SECOND);
+
+  while (1)
+  {
+    HAL_GPIO_WritePin(LED_RED_1_GPIO_Port, LED_RED_1_Pin, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(LED_GREEN_1_GPIO_Port, LED_GREEN_1_Pin, GPIO_PIN_SET);
+    tx_thread_sleep(GREEN_1_CYCLE_TIME_S * TX_TIMER_TICKS_PER_SECOND);
+
+    HAL_GPIO_WritePin(LED_GREEN_1_GPIO_Port, LED_GREEN_1_Pin, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(LED_YELLOW_1_GPIO_Port, LED_YELLOW_1_Pin, GPIO_PIN_SET);
+    tx_thread_sleep(YELLOW_1_CYCLE_TIME_S * TX_TIMER_TICKS_PER_SECOND);
+
+    HAL_GPIO_WritePin(LED_YELLOW_1_GPIO_Port, LED_YELLOW_1_Pin, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(LED_RED_1_GPIO_Port, LED_RED_1_Pin, GPIO_PIN_SET);
+    tx_thread_sleep(RED_1_CYCLE_TIME_S * TX_TIMER_TICKS_PER_SECOND);
+  }
+}
+
+void App_TrafficLight_Phase2_Entry(ULONG thread_input)
+{
+  (void)thread_input;
+
+  tx_semaphore_get(&Start_Sync, TX_WAIT_FOREVER);
+
+  tx_thread_sleep(INIT_CYCLE_TIME_S * TX_TIMER_TICKS_PER_SECOND);
+
+  while (1)
+  {
+	tx_thread_sleep((RED_2_CYCLE_TIME_S - RED_CYCLE_OVERLAP_S) * TX_TIMER_TICKS_PER_SECOND);
+
+    HAL_GPIO_WritePin(LED_RED_2_GPIO_Port, LED_RED_2_Pin, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(LED_GREEN_2_GPIO_Port, LED_GREEN_2_Pin, GPIO_PIN_SET);
+    tx_thread_sleep(GREEN_2_CYCLE_TIME_S * TX_TIMER_TICKS_PER_SECOND);
+
+    HAL_GPIO_WritePin(LED_GREEN_2_GPIO_Port, LED_GREEN_2_Pin, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(LED_YELLOW_2_GPIO_Port, LED_YELLOW_2_Pin, GPIO_PIN_SET);
+    tx_thread_sleep(YELLOW_2_CYCLE_TIME_S * TX_TIMER_TICKS_PER_SECOND);
+
+	HAL_GPIO_WritePin(LED_YELLOW_2_GPIO_Port, LED_YELLOW_2_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(LED_RED_2_GPIO_Port, LED_RED_2_Pin, GPIO_PIN_SET);
+	tx_thread_sleep(RED_CYCLE_OVERLAP_S * TX_TIMER_TICKS_PER_SECOND);
+  }
+}
 /* USER CODE END 1 */

@@ -45,7 +45,6 @@
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
-extern uint8_t systick_flag;
 extern uint8_t exti_flag;
 /* USER CODE END PV */
 
@@ -95,7 +94,7 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-  print_debug("Traffic Light Controller v0.3 splash text\r\n");
+  print_debug("Traffic Light Controller v0.4 splash text\r\n");
   traffic_light_init();
   /* USER CODE END 2 */
 
@@ -106,20 +105,6 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	if (systick_flag)
-	{
-	  HAL_NVIC_DisableIRQ(SysTick_IRQn);
-	  systick_flag = 0;
-	  HAL_NVIC_EnableIRQ(SysTick_IRQn);
-	  traffic_light_handler();
-	}
-	if (exti_flag)
-	{
-	  HAL_NVIC_DisableIRQ(EXTI4_15_IRQn);
-	  exti_flag = 0;
-	  HAL_NVIC_EnableIRQ(EXTI4_15_IRQn);
-	  goto_error_state();
-	}
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

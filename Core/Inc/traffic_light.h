@@ -30,13 +30,14 @@ void traffic_light_handler(void);
  */
 void goto_error_state(void);
 
-#define INIT_CYCLE_TIME_MS (2*1000)
-#define RED_1_CYCLE_TIME_MS (1*1000)
-#define YELLOW_1_CYCLE_TIME_MS (2*1000)
-#define GREEN_1_CYCLE_TIME_MS (7*1000)
-#define RED_2_CYCLE_TIME_MS (1*1000)
-#define YELLOW_2_CYCLE_TIME_MS (2*1000)
-#define GREEN_2_CYCLE_TIME_MS (5*1000)
-#define ERROR_FLASH_TOGGLE_TIME_MS (1*1000)
+#define INIT_CYCLE_TIME_S 2
+#define RED_1_CYCLE_TIME_S 9
+#define YELLOW_1_CYCLE_TIME_S 2
+#define GREEN_1_CYCLE_TIME_S 7
+#define RED_2_CYCLE_TIME_S 11
+#define YELLOW_2_CYCLE_TIME_S 2
+#define GREEN_2_CYCLE_TIME_S 5
+#define RED_CYCLE_OVERLAP_S 1
+#define ERROR_FLASH_TOGGLE_TIME_S 1
 
 #endif /* INC_TRAFFIC_LIGHT_H_ */
