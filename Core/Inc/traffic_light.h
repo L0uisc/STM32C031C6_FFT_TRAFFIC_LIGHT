@@ -37,6 +37,6 @@ void goto_error_state(void);
 #define RED_2_CYCLE_TIME_MS (1*1000)
 #define YELLOW_2_CYCLE_TIME_MS (2*1000)
 #define GREEN_2_CYCLE_TIME_MS (5*1000)
-#define ERROR_FLASH_TOGGLE_TIME_MS (2*1000)
+#define ERROR_FLASH_TOGGLE_TIME_MS (1*1000)
 
 #endif /* INC_TRAFFIC_LIGHT_H_ */

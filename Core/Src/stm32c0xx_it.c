@@ -58,6 +58,7 @@
 
 /* USER CODE BEGIN EV */
 uint8_t systick_flag = 0;
+uint8_t exti_flag = 0;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -155,5 +156,8 @@ void EXTI4_15_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
-
+void HAL_GPIO_EXTI_Falling_Callback(uint16_t GPIO_Pin)
+{
+  exti_flag = 1;
+}
 /* USER CODE END 1 */

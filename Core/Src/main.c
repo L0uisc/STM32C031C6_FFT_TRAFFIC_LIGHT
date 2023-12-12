@@ -45,6 +45,7 @@ UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 extern uint8_t systick_flag;
+extern uint8_t exti_flag;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -107,6 +108,13 @@ int main(void)
 	  systick_flag = 0;
 	  HAL_NVIC_EnableIRQ(SysTick_IRQn);
 	  traffic_light_handler();
+	}
+	if (exti_flag)
+	{
+	  HAL_NVIC_DisableIRQ(EXTI4_15_IRQn);
+	  exti_flag = 0;
+	  HAL_NVIC_EnableIRQ(EXTI4_15_IRQn);
+	  goto_error_state();
 	}
     /* USER CODE END WHILE */
 
@@ -213,7 +221,7 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin : BUTTON_Pin */
   GPIO_InitStruct.Pin = BUTTON_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(BUTTON_GPIO_Port, &GPIO_InitStruct);
 
