@@ -75,7 +75,7 @@ void Error_Handler(void);
 #define LED_GREEN_2_Pin GPIO_PIN_5
 #define LED_GREEN_2_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
-
+#define BUTTON_PUSHED_FLAG 1
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

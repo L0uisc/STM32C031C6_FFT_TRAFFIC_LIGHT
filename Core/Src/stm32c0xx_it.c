@@ -22,6 +22,7 @@
 #include "stm32c0xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "app_azure_rtos.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -58,7 +59,7 @@
 extern TIM_HandleTypeDef htim14;
 
 /* USER CODE BEGIN EV */
-uint8_t exti_flag = 0;
+extern TX_EVENT_FLAGS_GROUP flags;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -132,6 +133,6 @@ void TIM14_IRQHandler(void)
 /* USER CODE BEGIN 1 */
 void HAL_GPIO_EXTI_Falling_Callback(uint16_t GPIO_Pin)
 {
-  exti_flag = 1;
+  tx_event_flags_set(&flags, BUTTON_PUSHED_FLAG, TX_OR);
 }
 /* USER CODE END 1 */
