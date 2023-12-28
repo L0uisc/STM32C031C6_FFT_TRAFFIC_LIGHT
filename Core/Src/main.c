@@ -94,7 +94,7 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-  print_debug("Traffic Light Controller v0.4 splash text\r\n");
+  print_debug("Traffic Light Controller v0.5 splash text\r\n");
   /* USER CODE END 2 */
 
   MX_ThreadX_Init();
